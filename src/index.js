@@ -23,26 +23,29 @@ function checksExistsUserAccount(request, response, next) {
 
 }
 
+
 app.post('/users', (request, response) => {
-        const {name, username } = request.body;
+  const { name, username } = request.body;
 
-        const userExiste = users.find(user => user.username === username);
+  const usernameExists = users.some((user) => user.username === username);
 
-        if(userExiste) {
-          return response.status(400).json({ error: "User already exist !!"});
-        }
+  if (usernameExists) {
+    return response.status(400).json({ error: "Username already exists" });
+  }
 
-        const user = { 
-          id: uuidv4(),
-          name,
-          username,
-          todos: []
-        };
+  const user = {
+    id: uuidv4(),
+    name,
+    username,
+    todos: [],
+  };
 
-        users.push(user);
+  users.push(user);
 
-       return response.status(201).json(user.todos); 
+  return response.status(201).json(user);
 });
+
+
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
         const { user } = request;
